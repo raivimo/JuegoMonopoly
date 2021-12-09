@@ -49,7 +49,7 @@ public class Monopoly {
         System.out.println("---BIENVENIDO AL JUEGO DEL MONOPOLY----");
         System.out.println("-------POR RAIMON VILAR MORERA---------");
         System.out.println("LAS INSTRUCCIONES DEL JUEGO SON LAS SIGUIENTES:");
-        System.out.println("SE TE ASIGNARÁ UNA CANTIDAD DE DINERO INICIAL (200€)");
+        System.out.println("SE TE ASIGNARÁ UNA CANTIDAD DE DINERO INICIAL (400€)");
         System.out.println("Y OBLIGATORIAMENTE HAS DE TIRAR LOS DADOS EN CADA TURNO.");
         System.out.println("SEGUN LA CASILLA QUE CAIGAS: SUERTE, CAJA DE AHORROS, CÁRCEL O CALLE");
         System.out.println("TENDRÁS OPCION DE COMPRAR O PASAR SIN COMPRAR. EN EL CASO DE QUE CAIGAS");
@@ -116,10 +116,6 @@ public class Monopoly {
     public static void turnoJugador() {
         //NOS ASEGURAMOS SIEMPRE QUE SEA MENOR QUE numJugadores. CONTADOR = 0.
         if (contador < numJugadores ) {
-            if (carcel && contcarcel<3){
-                contcarcel++;
-                contador++;
-            }
             for (int i = contador; i < (contador + 1); i++) {
                 System.out.println("ES EL TURNO DE:       " + nombreJugador[i]);
                 System.out.println("DINERO DISPONIBLE:    " + dineroJugador[i] + " €");
@@ -133,9 +129,6 @@ public class Monopoly {
                 }
             cobrarAlquiler(libreOcomprada);
             cobrarCasas(comprarCasas);
-             
-            
-            
             do {
                 menuJugador();
                 realizarOperacion(opcion);
@@ -144,15 +137,12 @@ public class Monopoly {
         }
         else
             contador=0;
-            
-            
-
-}
+    }
 
     //ASIGNA EL DINERO INICIAL DE LOS JUGADORES EN FUNCIÓN DE SU NUMERO.
     public static void dineroInicial() {
         for (int i = 0; i < numJugadores; i++) {
-            dineroJugador[i] += 2000;
+            dineroJugador[i] += 400;
         }
     }
 
@@ -182,18 +172,6 @@ public class Monopoly {
         }
     }
     
-    //CONTROLA QUE ESTEN LIBRES LAS PROPIEDADES
-    /*public static void libreOcomprada() {
-        for (int i = 0; i < libreOcomprada.length; i++) {
-            //RECORREMOS EL ARRAY Y LO COMPARAMOS CON UN VALOR, QUE INDICA QUE ESTÁ LIBRE.
-            if (libreOcomprada[i] == 5) {
-                System.out.println("ESTA CALLE ESTÁ LIBRE. PUEDES COMPRARLA.");
-            } else {
-                System.out.println("LO SIENTO, ESTA CALLE PERTENECE A OTRO JUGADOR.");
-            }
-        }
-    }
-    */
     //LLAMA A libreOcomprada PARA SABER SI ESTÁ LIBRE LA CALLE Y EN CASO DE QUE ASÍ SEA ASIGNA EL VALOR DEL CONTADOR A LA PROPIEDAD
     //DEL JUGADOR COMPRADA Y ASÍ RELACIONARLAS.
     public static void comprarCalle(int[] libreOcomprada) {
@@ -287,7 +265,7 @@ public class Monopoly {
         //POSICIONAMOS AL JUGADOR Y CONTROLAMOS EL BUCLE PARA QUE SOLO DEJE HACER 1 ITERACIÓN
         for (int i = posicionJugador[contador]; i < (posicionJugador[contador]) + 1 ; i++) {
             //COMPROBAMOS QUE ESTÉ LIBRE
-            if (comprarCasas[i] == contador) {
+            if (libreOcomprada[i] == contador){
                 System.out.println("EL PRECIO DE ESTA CASA ES DE: " + precioCasas[i] + " €. PULSA 1 PARA COMPRAR.");
                 //COMPROBAMOS QUE TENGA DINERO PARA ADQUIRIRLA Y ASIGNA CONTADOR PARA SABER QUE JUGADOR LA HA COMPRADO.
                 if (dineroJugador[contador] >= precioCasas[i]) {
@@ -304,75 +282,49 @@ public class Monopoly {
                 System.out.println("LO SIENTO. PRIMERO HAS DE COMPRAR LA CALLE");
         }
     }
-   
-           
+    
+    //ESTA FUNCION SE ENCARGA DE COBRAR LAS CASAS. NO HE CONSEGUIDO HACERLA FUNCIONAR CORRECTAMENTE.  
     public static void cobrarCasas(int[] comprarCasas) {
-        //POSICIONAMOS AL JUGADOR EN LA CALLE SEGUN SU TURNO, QUE ESTÁ CONTROLADO POR CONTADOR
-        //for (int i = posicionJugador[contador]; i < (posicionJugador[contador]) + 1 ; i++) {
-            //COMPARAMOS EL VALOR DEL ARRAY CON EL DEL CONTADOR PARA SABER QUE CASA PERTENECE A QUE JUGADOR
-            switch (comprarCasas[posicionJugador[contador]]) {  //MAX NUM JUGADORES ES 4.
-                case 0:
-                    //METEMOS UN IF PARA NO COBRANOS ALQUILER A NOSOTROS MISMOS CUANDO CAIGAMOS EN NUESTRAS PROPIEDADES.
-                    //DE ESTO ME LLEVO 4H DAR CON LA SOLUCIÓN :(
-                    
-                        System.out.println("");
-                        System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[0]);
-                        System.out.println("HAS DE PAGARLE " + precioCasas[posicionJugador[contador]] + " € POR LA CASA.");
-                        dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
-                        dineroJugador[0] += precioCasas[posicionJugador[contador]];
-                    
-                    break;
-                case 1:
-                    
-                        System.out.println("");
-                        System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[1]);
-                        System.out.println("HAS DE PAGARLE " + precioCasas[posicionJugador[contador]] + " € POR LA CASA.");
-                        dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
-                        dineroJugador[1] += precioCasas[posicionJugador[contador]];
-                    
-                    break;
-                case 2:
-                   
-                        System.out.println("");
-                        System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[2]);
-                        System.out.println("HAS DE PAGARLE " + precioAlquiler[posicionJugador[contador]] + " € POR LA CASA.");
-                        dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
-                        dineroJugador[2] += precioCasas[posicionJugador[contador]];
-                   
-                    break;
-                case 3:
-                   
-                        System.out.println("");
-                        System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[3]);
-                        System.out.println("HAS DE PAGARLE " + precioAlquiler[posicionJugador[contador]] + " € POR LA CASA");
-                        dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
-                        dineroJugador[3] += precioCasas[posicionJugador[contador]];
-                    
-                    break;
-            }
-        } 
-    
-    //TE MANDA A LA CARCEL
-    public static void carcel (boolean carcel){
-        if(posicionJugador[contador] == 30){
-            System.out.println("LO SIENTO. HAS CAIDO EN LA CARCEL. PASARAS 3 TURNOS SIN JUGAR");
-            carcel = true;
-            contcarcel=0;
-            
+        //COMPARAMOS EL VALOR DEL ARRAY CON EL DEL CONTADOR PARA SABER QUE CASA PERTENECE A QUE JUGADOR
+        switch (comprarCasas[posicionJugador[contador]]) {  //MAX NUM JUGADORES ES 4.
+            case 0:
+                System.out.println("");
+                System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[0]);
+                System.out.println("HAS DE PAGARLE " + precioCasas[posicionJugador[contador]] + " € POR LA CASA.");
+                dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
+                dineroJugador[0] += precioCasas[posicionJugador[contador]];
+                break;
+            case 1:
+                System.out.println("");
+                System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[1]);
+                System.out.println("HAS DE PAGARLE " + precioCasas[posicionJugador[contador]] + " € POR LA CASA.");
+                dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
+                dineroJugador[1] += precioCasas[posicionJugador[contador]];
+                break;
+            case 2:
+                System.out.println("");
+                System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[2]);
+                System.out.println("HAS DE PAGARLE " + precioAlquiler[posicionJugador[contador]] + " € POR LA CASA.");
+                dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
+                dineroJugador[2] += precioCasas[posicionJugador[contador]];
+                break;
+            case 3:
+                System.out.println("");
+                System.out.println("ESTA CASA PERTENECE Al JUGADOR: " + nombreJugador[3]);
+                System.out.println("HAS DE PAGARLE " + precioAlquiler[posicionJugador[contador]] + " € POR LA CASA");
+                dineroJugador[contador] -= precioCasas[posicionJugador[contador]];
+                dineroJugador[3] += precioCasas[posicionJugador[contador]];
+                break;
         }
-    }
-    
-    
-        
-    
-   
+    } 
 
     public static void main(String[] args) {
         menu();
-        
+        //AQUI PONEMOS EL TABLERO LIBRE CON UN NUMERO ARBITRARIO PARA PODER COMPRAR LAS CALLES.
         for (int i = 0; i < libreOcomprada.length; i++) {
             libreOcomprada[i] = 5;
         }
+        //LO MISMO PARA LAS CASAS
         for (int i = 0; i < comprarCasas.length; i++) {
             comprarCasas[i] = 5;
         }
@@ -380,8 +332,7 @@ public class Monopoly {
             dineroInicial();
             generarAlquiler(precioCalles);
             precioCasas(precioCalles);
-            carcel(carcel);
-            //PONEMOS A "CINCO" EL TABLERO PARA INDICAR QUE TODAS LAS PROPIEDADES ESTAN LISTAS PARA SU VENTA.
+           
            
             do {
                 turnoJugador();
